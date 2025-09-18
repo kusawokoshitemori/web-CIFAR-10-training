@@ -9,6 +9,9 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
+from tqdm import tqdm  # 進捗バー用
+from datetime import datetime
+
 # random seedを設定
 seed = 2025
 torch.manual_seed(seed)
@@ -76,7 +79,6 @@ device = "cuda"
 net = Net().to(device)
 
 
-from tqdm import tqdm  # 進捗バー用
 
 # 学習部分
 def train(net, opt, criterion, num_epochs=10):
@@ -165,5 +167,21 @@ def plot_fig(history):
     plt.show()
 
 plot_fig(history=history)
+
+# 画像を受け取って、分類結果を返す処理を行うコード
+def predict(image_tensor, model, device):
+    model.eval()
+    with torch.no_grad():
+        image_tensor = image_tensor.to(device)
+        output = model(image_tensor.unsqueeze(0))  # バッチ次元追加
+        _, predicted = torch.max(output, 1)
+    return predicted.item()
+
+# モデルを保存する
+timestamp = datetime.now().strftime("%m%d%H%M")  # 09181508 のような形式
+filename = f"cifar10_model_{timestamp}.pth"
+
+torch.save(net.state_dict(), filename)
+print(f"モデルを保存しました: {filename}")
 
 
