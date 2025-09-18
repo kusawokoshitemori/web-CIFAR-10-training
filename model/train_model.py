@@ -81,7 +81,7 @@ net = Net().to(device)
 
 
 # 学習部分
-def train(net, opt, criterion, num_epochs=10):
+def train(net, opt, criterion, num_epochs=50):
     """
     データの繰り返し処理を実行し、入力データをネットワークに与えて最適化します
     """
